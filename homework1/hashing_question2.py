@@ -1,4 +1,5 @@
 import random
+import pandas as  pd
 import numpy as np
 import time
 import seaborn as sns
@@ -10,39 +11,33 @@ import matplotlib.pyplot as plt
 def getNumberOfTrials(domain):
     uniques = {}
     i = 0
-    isFull = False
-    while not isFull:
+    while len(uniques.keys()) < domain:
         randvalue = random.randint(1, domain)
         i += 1
-        if len(uniques.keys()) == domain:
-            isFull = True
-        uniques.update({str(randvalue): randvalue})
+        uniques.update({randvalue: randvalue})
     return i
 
 
 def getTimeElasped(m, n):
-    x_data = []
-    y_data = []
-    for each_n in n:
-        startTimer = time.time()
-        for each_m in m:
-            x_lab, y_lab = experiment(each_m, each_n)
-        endTimer = time.time()
-        timeSpent = endTimer - startTimer
-        y_data.append(timeSpent)
-        x_data.append(each_n)
-    return x_data, y_data
+    data = pd.DataFrame([], columns=['m', 'n', 'time'])
+    for each_m in m:
+        for each_n in n:
+            startTimer = time.time()
+            x_lab = experiment(each_m, each_n)
+            endTimer = time.time()
+            timeSpent = endTimer - startTimer
+            output = pd.DataFrame([[ each_m, each_n, timeSpent]], columns=['m', 'n', 'time'])
+            data = data.append(output)
+            print(output)
+    return data
 
 
 def experiment(m, n):
     x_labels = []
-    y_levels = []
     for each in range(m):
         x = getNumberOfTrials(n)
         x_labels.append(x)
-        y = each / m
-        y_levels.append(y)
-    return x_labels, y_levels
+    return x_labels
 
 
 startTime = time.time()
@@ -68,7 +63,8 @@ print("B: (10 points) Repeat the experiment m = 300 times, and record for each t
 # print("my x_labels are ", x_labels , "\n" )
 # print("my y_labels are ", y_labels,"\n")
 
-plt.hist(x_labels,cumulative=True, density=True, bins=10)
+plt.hist(x_labels,cumulative=True, density=True, histtype= 'step' , bins=len(y_labels))
+plt.xlabel("Number of trials")
 plt.show()
 print("C: (10 points) Empirically estimate the expected number of k random trials in order to have a collision")
 
@@ -80,11 +76,16 @@ timeElapsed1 = endTime - startTime
 print("For m =  300 trials, it took about ", timeElapsed1, "seconds", "\n")
 print("Show a plot of the run time as you gradually increase the parameters n and m")
 
-n = [300, 3000, 9000, 12000, 15000, 18000, 20000]
+n = [300, 3000, 12000,  18000, 20000]
 m = [400,  2500, 5000]
-x_runtime, y_runtime = getTimeElasped(m, n)
+x_runtime = getTimeElasped(m, n)
 
-print(x_runtime)
-plt.plot(x_runtime, y_runtime)
+fig , ax = plt.subplots()
 
+for m in [400,  2500, 5000]:
+    ax.plot(x_runtime[x_runtime.m == m].n, x_runtime[x_runtime.m == m].time, label=m)
+
+ax.set_xlabel("domain Size n")
+ax.set_ylabel("Time (in Second)")
+ax.legend(loc='best')
 plt.show()
