@@ -5,12 +5,12 @@ from itertools import combinations
 import pandas as pd
 import re
 
-input_directory = "//Users/CheickSissoko/Documents/Spring2020_CS6140/implementations/hw2/"
+from homework2.inputs import D1, D2, D3, D4
 
 
 def split_char(k_grams, string):
     string = remove_all_punctuation(string)
-    my_out = np.unique([(string[i:i + k_grams]) for i in range(0, len(string), k_grams)])
+    my_out = np.unique([(string[i:i + k_grams]) for i in range(len(string) + 1 - k_grams) ])
     return my_out
 
 
@@ -20,14 +20,7 @@ def split_word(string):
 
 
 def remove_all_punctuation(string):
-    return "".join((char for char in string.rstrip() if char not in punctuation))
-
-
-def get_text(doc_name):
-    file = open(input_directory + doc_name + ".txt", "r")
-    text = file.readline()
-    file.close()
-    return text
+    return "".join((char for char in string if char not in punctuation))
 
 
 def get_jaccar_sim(di_kgram, dj_kgram):
@@ -36,54 +29,54 @@ def get_jaccar_sim(di_kgram, dj_kgram):
     return intersect / union
 
 
-#
-# for filename in os.listdir(input_directory):
-#     with open(input_directory + filename, "r") as fp:
-#         print(fp.readline())
-#         fp.close()
-
+printList = ["D1", "D2", "D3", "D4"]
+myList = [D1, D2, D3, D4]
 k_grams_character = [2, 3]
 k_grams_words = 2
 
-columns = ["document", "k-grams_Constructor", "unique_k-gram_count"]
+columns = ["document", "k-grams", "unique_count"]
 result = pd.DataFrame([], columns=columns)
 
-for filename in os.listdir(input_directory):
-    with open(input_directory + filename, "r") as fp:
-        lines = fp.readline()
-        for each_kc in k_grams_character:
-            char_grams = split_char(each_kc, lines)
-            const = str(each_kc) + "-grams characters"
-            out = pd.DataFrame([[filename, const, char_grams.__len__()]], columns=columns)
-            result = result.append(out)
-        word_grams = split_word(lines)
-        out2 = pd.DataFrame([[filename, "2-grams words", len(word_grams)]], columns=columns)
-        result = result.append(out2)
-        fp.close()
+for each_d, print_d in zip(myList, printList):
+    i = 1
+    for each_kc in k_grams_character:
+        char_grams = split_char(each_kc, each_d)
+        const = "G" + str(i)
+        out = pd.DataFrame([[print_d, const, len(char_grams)]], columns=columns)
+        result = result.append(out)
+        i += 1
+    word_grams = split_word(each_d)
+    out2 = pd.DataFrame([[print_d, "G3", len(word_grams)]], columns=columns)
+    result = result.append(out2)
 
 print("A: (25 points) How many distinct k-grams are there for each document with each type of k-gram?", "\n")
 print(result, "\n")
 
 print("B: (25 points) Compute the Jaccard similarity between all pairs of documents for each type of k-gram.", "\n")
-mylist = ["D1", "D2", "D3", "D4"]
 
+printList = ["D1", "D2", "D3", "D4"]
 columns_2 = ["Sets", "k-grams_Constructor", "Jaccard Similarity"]
 result = pd.DataFrame([], columns=columns_2)
-list_of_pairs = list(combinations(mylist,2))
-for each_pair in list_of_pairs:
-    i_text = get_text(each_pair[0])
-    j_text = get_text(each_pair[1])
+list_of_pairs = list(combinations(myList, 2))
+print_pairs = list(combinations(printList, 2))
+j = 1
+
+for each_pair, print_d in zip(list_of_pairs, print_pairs):
+    i_text = each_pair[0]
+    j_text = each_pair[1]
+    i = 1
     for each_kc in k_grams_character:
         char_grams_j = split_char(each_kc, i_text)
         char_grams_i = split_char(each_kc, j_text)
         jacc = get_jaccar_sim(char_grams_i, char_grams_j)
-        const = str(each_kc) + "-grams characters"
-        out = pd.DataFrame([[each_pair, const, jacc]], columns=columns_2)
+        const = "G" + str(i)
+        out = pd.DataFrame([[print_d, const, jacc]], columns=columns_2)
         result = result.append(out)
+        i += 1
     word_grams_i = split_word(i_text)
     word_grams_j = split_word(j_text)
     jacc_2 = get_jaccar_sim(word_grams_i, word_grams_j)
-    out2 = pd.DataFrame([[each_pair, "2-grams words", jacc_2]], columns=columns_2)
+    out2 = pd.DataFrame([[print_d, "G3", jacc_2]], columns=columns_2)
     result = result.append(out2)
 
 print(result, "\n")
