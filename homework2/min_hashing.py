@@ -3,7 +3,7 @@ from string import punctuation
 import pandas as pd
 import time
 
-np.random.seed(1)
+np.random.seed(100)
 from homework2.inputs import D1, D2
 
 
@@ -29,11 +29,13 @@ def get_report(number_of_f):
         a_sign = get_min_hash_signature(my_domain, a_hash)
         b_sign = get_min_hash_signature(my_domain, b_hash)
         total_k = my_domain.shape[1]
+        # print(a_sign, b_sign)
         intersection = np.intersect1d(a_sign, b_sign).__len__()
         jacc = intersection / total_k
         endTime = time.time()
         timeElapsed1 = endTime - startTime
         rep = pd.DataFrame([[each_hash_q, jacc, timeElapsed1]], columns=headers)
+        print(rep)
         report = report.append(rep)
     return report
 
@@ -42,7 +44,9 @@ def get_min_hash_signature(matrix, my_hash):
     pd_vector = pd.DataFrame([matrix[my_hash].iloc[0]], columns=my_hash)
     updated_domain = matrix[my_hash]
     for index, row in updated_domain.iterrows():
-        pd_vector = row.where(row[my_hash] < pd_vector.iloc[0], row[my_hash])
+        print(pd_vector.iloc[0])
+        pd_vector = row.where(row[my_hash] > pd_vector.iloc[0], row[my_hash])
+        # print(pd_vector)
     return pd_vector
 
 
@@ -57,14 +61,14 @@ def get_domain(a_hash, b_hash, hash_funct):
     return domain_matrix
 
 
-# generating permuation functions
+# generating permutation functions
 
 
-number_hash_functions = [10, 20, 40, 60, 150, 300, 600, 900, 1000 ]
+number_hash_functions = [5, 9, 10, 20, 40, 80, 150, 300, 600, 900, 1000]
 
 number_hash_functions2 = [20, 60, 150, 300, 600]
 
 
-print(get_report(number_hash_functions2))
+# print(get_report(number_hash_functions2), "\n")
 
 print(get_report(number_hash_functions), '\n')

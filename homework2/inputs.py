@@ -1,6 +1,4 @@
 
-import numpy as np
-
 D1 = "olympus omd em mark iii what we expect founded in october this year sees olympus putting on a party hat and " \
      "celebrating its th birthday and the company looks to be celebrating its centenary by releasing the longawaited " \
      "olympus omd em mark iii during its birthday month the olympus omd em mark iii will be the third iteration of " \
