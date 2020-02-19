@@ -1,15 +1,10 @@
-from collections import OrderedDict
-from functools import reduce
-from itertools import combinations, permutations
-from scipy.spatial.distance import euclidean
-import pandas as pd
+from itertools import combinations
+import matplotlib.pyplot as plt
 import numpy as np
-from numpy.linalg import norm
-import matplotlib.pyplot as plt
-
 import pandas as pd
-import matplotlib.pyplot as plt
 import seaborn as sns
+from numpy.linalg import norm
+from scipy.spatial.distance import euclidean
 
 delimiter = "\s+"
 directory = "/Users/CheickSissoko/Documents/CS6140/homework4/"
@@ -49,6 +44,7 @@ def get_single_link_shortest_points(pairs):
         vector_b = data_points.get(each_pair[1])
         distances_between_all_pairs.update({each_pair: euclidean(vector_a, vector_b)})
     key_min = min(distances_between_all_pairs.keys(), key=(lambda k: distances_between_all_pairs[k]))
+    print("the key is ",key_min)
     return key_min
 
 
