@@ -18,6 +18,10 @@ for rows in C1.itertuples():
     index += 1
 
 
+def distance(p1, p2):
+    return np.sum((np.array(p1) - np.array(p2)) ** 2)
+
+
 def remove_pairs(cluster, remain):
     pairs = list(combinations(cluster, 2))
     for each_pair in pairs:
@@ -42,9 +46,9 @@ def get_single_link_shortest_points(pairs):
     for each_pair in pairs:
         vector_a = data_points.get(each_pair[0])
         vector_b = data_points.get(each_pair[1])
-        distances_between_all_pairs.update({each_pair: euclidean(vector_a, vector_b)})
+        distances_between_all_pairs.update({each_pair: distance(vector_a, vector_b)})
     key_min = min(distances_between_all_pairs.keys(), key=(lambda k: distances_between_all_pairs[k]))
-    print("the key is ",key_min)
+    print("the key is ", key_min)
     return key_min
 
 
@@ -53,7 +57,7 @@ def get_complete_link_shortest_points(pairs):
     for each_pair in pairs:
         vector_a = data_points.get(each_pair[0])
         vector_b = data_points.get(each_pair[1])
-        distances_between_all_pairs.update({each_pair: euclidean(vector_a, vector_b)})
+        distances_between_all_pairs.update({each_pair: distance(vector_a, vector_b)})
     key_max = max(distances_between_all_pairs.keys(), key=(lambda k: distances_between_all_pairs[k]))
     return key_max
 
@@ -82,7 +86,7 @@ def gerante_report(clusters):
         for each_point in points:
             for rows in C1.itertuples():
                 if rows._1 == each_point:
-                    rep = pd.DataFrame([["Cluster " + str(index), rows._1, rows._2, rows._3]], columns=final_header)
+                    rep = pd.DataFrame([["Cluster_" + str(index), rows._1, rows._2, rows._3]], columns=final_header)
                     report = report.append(rep)
         index += 1
     return report
@@ -171,10 +175,8 @@ while len(clusters) > 4:
                 clusters.pop(each_key)
             index += 1
 report = gerante_report(clusters)
-print("######### Simple Link Report ###########")
+print("######### Mean Link Report ###########")
 print(report)
 sns.scatterplot(data=report, x='X_values', y='Y_values', hue='Cluster_Group')
 plt.title("Mean Link Cluster")
-plt.show()
-
-
+# plt.show()

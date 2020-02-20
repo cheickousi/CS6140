@@ -6,6 +6,7 @@ import pandas as pd
 import seaborn as sns
 from numpy.linalg import norm
 from scipy.spatial.distance import euclidean
+from homework4.gonzalez import centers as gonzalez_center
 
 delimiter = "\s+"
 directory = "/Users/CheickSissoko/Documents/CS6140/homework4/"
@@ -40,13 +41,14 @@ def get_closest(point, centers):
     the i-th set of centroids.
     '''
     best_centers = {}
-    index =0
+    index = 0
     for each_center in centers:
         dist = distance(each_center, point)
         best_centers.update({index: dist})
-        index +=1
+        index += 1
     best = min(best_centers.keys(), key=(lambda k: best_centers[k]))
     return centers[best]
+
 
 # function to compute euclidean distance
 def distance(p1, p2):
@@ -92,11 +94,9 @@ def get_3_mean_costs(center, data):
 
 data = np.array(data)
 k = 3
-gonsalez = {1: (13.513729853983081, 45.033556411507824), 2: (115.0, 95.0), 3: (55.09667203443313, 88.41858189114944)}
 
-
-gonz_array = np.array(list(gonsalez.values()))
-epoch = 100
+gonz_array = np.array(list(gonzalez_center.values()))
+epoch = 150
 
 header1 = ['epoch', '3 Mean Cost']
 header2 = ['epoch', '3 Center Cost']
@@ -112,15 +112,14 @@ for each_epoc in range(epoch):
     report_3_mean_cost = report_3_mean_cost.append(rep)
     report_3_center_cost = report_3_center_cost.append(rep2)
     if (np.sum(center == gonz_array)) == 6:
-        fraction +=1
+        fraction += 1
 
+print(fraction, " Out of ", epoch, " Matched")
 
-print( fraction , " Out of ", epoch, " Matched")
+hist = report_3_mean_cost.hist(bins=epoch *2, cumulative=True, density=True)
+plt.title("3 Mean Cost CDF")
+# plt.show()
 
-hist = report_3_mean_cost.hist(bins=epoch**3, cumulative=True, density=True)
-plt.title( "3 Mean Cost CDF")
-plt.show()
-
-hist2 = report_3_center_cost.hist(bins=epoch**3, cumulative=True, density=True)
-plt.title( "3 Center Cost CDF")
-plt.show()
+hist2 = report_3_center_cost.hist(bins=epoch *2, cumulative=True, density=True)
+plt.title("3 Center Cost CDF")
+# plt.show()

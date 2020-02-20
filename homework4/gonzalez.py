@@ -19,8 +19,6 @@ for rows in C2.itertuples():
     data_points.update({index: (rows._2, rows._3)})
     index += 1
 
-# print(data_points)
-
 k = 3
 centers = {1: data_points.get(1)}
 array_ofj = np.random.uniform(1, 1, size=len(data_points.keys()))
@@ -44,14 +42,16 @@ for _ in range(k - 1):
     pass
 print(centers)
 
-headers =  ['Center_Group', "Center_Point", "X_values", "Y_values"]
+headers =  ['Cluster_Group', "Center_Point", "X_values", "Y_values"]
 gonzalez_report = pd.DataFrame([],columns=headers)
 for key, value in data_points.items():
     center = array_ofj[key-1]
     value =  list(value)
-    rep = pd.DataFrame([[" Center Group" + str(center), centers.get(center), value[0], value[1] ]], columns=headers)
+    rep = pd.DataFrame([["Cluster_Group" + str(center), centers.get(center), value[0], value[1] ]], columns=headers)
     gonzalez_report = gonzalez_report.append(rep)
 
-sns.scatterplot(data=gonzalez_report, x='X_values', y='Y_values', hue='Center_Group')
+sns.scatterplot(data=gonzalez_report, x='X_values', y='Y_values', hue='Cluster_Group')
+
+# print(gonzalez_report["Center_Group", "Center_Point"].groupby(by='Center_Point'))
 plt.title("Gonzalez")
-plt.show()
+# plt.show()
