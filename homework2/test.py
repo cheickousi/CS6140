@@ -46,5 +46,8 @@ k_grams_character = [2, 3]
 k_grams_words = 2
 
 mylist = ["D1", "D2", "D3", "D4"]
-list_of_pairs = list(combinations(mylist,2))
-print(res)
+# list_of_pairs = list(combinations(mylist,2))
+
+
+numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+print (numbers[:] )
