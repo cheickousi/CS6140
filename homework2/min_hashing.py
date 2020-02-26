@@ -70,4 +70,3 @@ number_hash_functions2 = [20, 60, 150, 300, 600]
 
 
 # print(get_report(number_hash_functions2), "\n")
-from homework2

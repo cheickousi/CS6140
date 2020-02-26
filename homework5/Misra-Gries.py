@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import pandas as pd
 
 def getMisraGries(Data, k_1):
     counter_m = 0
@@ -31,12 +32,20 @@ k_1 = 9
 S1_labels, S1_counters, S1_Counter_ration = getMisraGries(S1, k_1)
 S2_labels, S2_counters, S2_Counter_ration = getMisraGries(S2, k_1)
 
-plt.bar( S1_Counter_ration, S1_labels,color = color_palette_list)
-plt.title('S1 Misra Gries')
-plt.show()
-plt.bar(S2_Counter_ration, S2_labels,color = color_palette_list)
-plt.title('S2 Misra Gries')
-# print(np.sum(S1_Counter_ration))
-plt.show()
+headers =['Labels', 'Counter', 'Counter Radio']
+print("S1 Results")
+labels = pd.DataFrame(S1_labels)
+Counters = pd.DataFrame(S1_counters)
+Ratio = pd.DataFrame(S1_Counter_ration)
+rep = pd.concat([Counters, labels, Ratio], axis=1, names=headers)
+print(rep)
+
+
+print("S2 Results")
+labels = pd.DataFrame(S2_labels)
+Counters = pd.DataFrame(S2_counters)
+Ratio = pd.DataFrame(S2_Counter_ration)
+rep2 = pd.concat([Counters, labels, Ratio], axis=1, names=headers)
+print(rep2)
 
 # print(list(Counters))
