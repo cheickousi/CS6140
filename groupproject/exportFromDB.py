@@ -27,4 +27,7 @@ conn = create_connection('/Users/CheickSissoko/Documents/SQLite/nba_injuries.db3
 sql = 'SELECT * FROM INJURY_DATA2 '
 excel = pd.read_sql(sql=sql, con=conn)
 
-excel.to_csv(path_or_buf="/Users/CheickSissoko/Documents/Spring2020_CS6140/groupproject/consolidateData_v2.csv")
+# excel.to_csv(path_or_buf="/Users/CheickSissoko/Documents/Spring2020_CS6140/groupproject/consolidateData_v2.csv")
+
+
+print(excel.head(15))
