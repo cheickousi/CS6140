@@ -33,21 +33,22 @@ A = np.loadtxt(cleanseUrl(A_scv_url), delimiter=',')
 
 U, s, Vt = LA.svd(A, full_matrices=False)
 
-k = 10
-header = ['k', 'L2_Norm']
+k = 20
+header = ['k', 'L2A-Ak', '10L2A', 'diff']
 report = pd.DataFrame([], columns=header)
 
 for eack_k in range(1, k + 1):
     Ak = reduceDimension(eack_k, U, s, Vt)
     norm = computeNorm(A, Ak)
-    rep = pd.DataFrame([[eack_k, norm]], columns=header)
+    compar = LA.norm(A, 2) * 1.1
+    rep = pd.DataFrame([[eack_k, norm, compar, norm - compar]], columns=header)
     report = report.append(rep)
 
 print(report)
 
 print("\nB (10 points): Find the smallest value k so that the L2 norm of A-Ak is less than 10% that of A; k might or "
       "might not be larger than 10\n")
-print(report[report['L2_Norm'] <= A.shape[0] * .1])
+print(report[report['diff'] <= 0])
 
 print("\nPlot the points in 2 dimensions in the way that minimizes the sum of residuals squared, and describe briefly "
       "how you did it\n")

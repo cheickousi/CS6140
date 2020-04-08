@@ -46,22 +46,29 @@ A = np.loadtxt(cleanseUrl(A_scv_url), delimiter=',')
 l = 19
 at_most_error = np.power(LA.norm(A, 'fro'), 2) / 10
 
-header = ['L', 'Error']
+header = ['L', 'Error', 'Theoretical', 'diff']
 report = pd.DataFrame([], columns=header)
 for each_l in range(1, l + 1):
     B = freq_dir(A, each_l)
     error = LA.norm(A.T @ A - B.T @ B)
-    rep = pd.DataFrame([[each_l, error]], columns=header)
+    bound = np.power(LA.norm(A), 2) / each_l
+    rep = pd.DataFrame([[each_l, error, bound, error - bound]], columns=header)
     report = report.append(rep)
 print(report)
 
 print("\nHow large does l need to be for the above error to be at most ∥A∥2F /10?\n")
 print(at_most_error)
-print(report[report['Error'] <= at_most_error])
+print(" At most error value is" + str(at_most_error))
+print(report[report['Error'] < at_most_error])
 
 print("\nHow large does l need to be for the above error to be at most ∥A−Ak∥2F/10(fork=2)?\n")
 U, s, Vt = LA.svd(A, full_matrices=False)
 Ak = reduceDimension(2, U, s, Vt)
 at_most_error2 = np.power(LA.norm(A - Ak, 'fro'), 2) / 10
-print(at_most_error2)
-print(report[report['Error'] <= at_most_error2])
+print(" At most error value isc" + str(at_most_error2))
+print(report[report['Error'] < at_most_error2])
+#
+#
+# bound = np.power(LA.norm(A, 'fro'), 2) / 16
+#
+# print(bound)
