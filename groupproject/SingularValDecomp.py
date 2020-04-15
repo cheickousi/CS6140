@@ -3,14 +3,6 @@ from matplotlib import pyplot as plt
 from scipy import linalg as LA
 
 
-def reduceDimension(k, U, S, Vt):
-    Uk = U[:k, :k]
-    # Sk = S[:k]
-    Vtk = Vt[:k, :]
-    Ak = Uk @ Vtk
-    return Ak
-
-
 def computeNorm(A, Ak):
     return LA.norm(A - Ak, 2)
 
@@ -21,19 +13,28 @@ A = np.loadtxt(path, delimiter=',')
 # OBTAINING THE SVD OF THE DATA
 U, s, Vt = LA.svd(A[:, 1:], full_matrices=False)
 
-print(U.shape)
-print(s.shape)
-print(Vt.shape)
-Vtk = Vt[:2, :]
-Ak = reduceDimension(2, U, s, Vt)
+from sklearn.decomposition import PCA, TruncatedSVD
+import pandas as pd
 
-print(Ak.shape)
+pca = PCA()
+svd = TruncatedSVD(n_components=2)
+x_svd = svd.fit_transform(A)
+x_svd = pd.DataFrame(x_svd)
+# print(x_svd.head())
+# print(x_svd.shape)
 
-X = Vtk[0, :]
-Y = Vtk[1, :]
+x_pca = pca.fit_transform(A)
+x_pca = pd.DataFrame(x_pca)
 
-print(X)
-print(Y)
+x_pca.plot.scatter(0, 1)
+# print(x_pca.head())
 
-plt.scatter(x=X, y=Y)
+plt.ylabel("PCA 1")
+plt.xlabel("PCA 2")
+plt.title("PRINCIPAL COMPONENT ANALYSIS (PCA)")
+
+x_svd.plot.scatter(0, 1)
+plt.ylabel("SVD 1")
+plt.xlabel("SVD 2")
+plt.title("SINGLE VALUE DECOMPOSITION (SVD)")
 plt.show()

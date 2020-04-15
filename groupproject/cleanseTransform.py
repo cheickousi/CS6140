@@ -98,6 +98,7 @@ cols_X = ['MONTH', 'AGE', 'MINUTES_PLAYED',
           'PLAYER_EFFICIENCY_RATING', 'POINTS_SCORED', 'FIELD_GOALD',
           'BODY_LOCATION', 'POSITION', 'REQUIRED_SURGERY', 'HEIGHT', 'TYPE_OF_INJURY_CLEANSED']
 
+injuryBagWords.drop_duplicates()
 cols_y = ['GAMES_PLAYED']
 injuryBagWords[cols_X].to_csv(path_or_buf=path_X, header=False)
 injuryBagWords[cols_y].to_csv(path_or_buf=path_y, header=False)
